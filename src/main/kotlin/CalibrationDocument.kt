@@ -1,6 +1,35 @@
+import CalibrationDocumentPartOne.Companion.partOne
+
 class CalibrationDocumentPartOne(testInput: List<String>) : CalibrationDocument(testInput, partOne())
+{
+    companion object {
+        fun partOne(): List<Pair<String, Int>> {
+            return (1..9).map { it.toString() }.toIndexPair()
+        }
+    }
+}
 
 class CalibrationDocumentPartTwo(testInput: List<String>) : CalibrationDocument(testInput, partTwo())
+{
+      companion object {
+
+          fun partTwo(): List<Pair<String, Int>> {
+              val digitWordsPairs = listOf(
+                  "one",
+                  "two",
+                  "three",
+                  "four",
+                  "five",
+                  "six",
+                  "seven",
+                  "eight",
+                  "nine"
+              ).toIndexPair()
+
+              return digitWordsPairs.union(partOne()).toList()
+          }
+      }
+}
 
 abstract class CalibrationDocument(private val testInput: List<String>, private val textToValues: List<Pair<String, Int>>) {
 
@@ -25,7 +54,7 @@ abstract class CalibrationDocument(private val testInput: List<String>, private 
     }
 
     private fun match(line: String, matcher: (CharSequence, Set<String>) -> Pair<Int, String>?): Int {
-        return textToValuesMap()[matcher(line, textToValuesMap().keys)!!.second]!!
+        return textToValuesMap().getValue(matcher(line, textToValuesMap().keys)!!.second)
     }
 
     private fun textToValuesMap() = textToValues.toMap()
@@ -35,28 +64,9 @@ abstract class CalibrationDocument(private val testInput: List<String>, private 
     }
 
 
-    companion object WordToValue {
-        fun partOne(): List<Pair<String, Int>> {
-            return (1..9).map { it.toString() }.toIndexPair()
-        }
+    companion object {
 
-        fun partTwo(): List<Pair<String, Int>> {
-            val digitWordsPairs = listOf(
-                "one",
-                "two",
-                "three",
-                "four",
-                "five",
-                "six",
-                "seven",
-                "eight",
-                "nine"
-            ).toIndexPair()
-
-            return digitWordsPairs.union(partOne()).toList()
-        }
-
-        private fun List<String>.toIndexPair(): List<Pair<String, Int>> {
+        fun List<String>.toIndexPair(): List<Pair<String, Int>> {
             return this.mapIndexed { index, value -> Pair(value, index + 1) }
         }
     }
