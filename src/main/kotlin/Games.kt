@@ -10,8 +10,14 @@ class Games(private val testInput: List<String>) {
 }
 
 class Game(private val testInput: String) {
+    companion object {
+        private const val GAME_NUMBER = 1
+        private const val TURN_STRING = 2
+        private const val COLOUR_DELIMETER = ";"
+    }
+
     fun number(): Int {
-        return ("Game (\\d+): (.*)".toRegex()).find(testInput)!!.groupValues[1].toInt()
+        return extractParts()[GAME_NUMBER].toInt()
     }
 
     fun numberOfTurns(): Int {
@@ -19,8 +25,10 @@ class Game(private val testInput: String) {
     }
 
     fun turns(): Iterable<Turn> {
-        return ("Game (\\d+): (.*)".toRegex()).find(testInput)!!.groupValues[2].split(";".toRegex()).map { Turn(it) }
+        return extractParts()[TURN_STRING].split(COLOUR_DELIMETER.toRegex()).map { Turn(it) }
     }
+
+    private fun extractParts() = ("Game (\\d+): (.*)".toRegex()).find(testInput)!!.groupValues
 
     fun isPossibleFor(cubes: Cubes) : Boolean {
         return turns().all { cubes.isPossibleTurn(it) }
