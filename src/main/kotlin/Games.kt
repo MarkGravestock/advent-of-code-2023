@@ -3,6 +3,10 @@ class Games(private val testInput: List<String>) {
         return testInput.map { Game(it) }.filter { it.isPossibleFor(cubes) }.map { it.number() }.sum()
     }
 
+    fun calculateTotalPowerOfMinimumCubes(): Int {
+        return testInput.map { Game(it) }.sumOf { it.findMinimumCubes().power() }
+    }
+
 }
 
 class Game(private val testInput: String) {
@@ -22,9 +26,17 @@ class Game(private val testInput: String) {
         return turns().all { cubes.isPossibleTurn(it) }
     }
 
+    fun findMinimumCubes(): Cubes {
+        return Cubes(turns().maxOf { it.red() }, turns().maxOf { it.green() }, turns().maxOf { it.blue() })
+    }
+
     class Cubes(val red: Int, val green: Int, val blue: Int) {
         fun isPossibleTurn(turn: Turn) : Boolean {
             return turn.red() <= red && turn.green() <= green && turn.blue() <= blue
+        }
+
+        fun power(): Int {
+            return red * green * blue
         }
 
         companion object {
