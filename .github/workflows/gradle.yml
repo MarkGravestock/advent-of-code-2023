@@ -32,9 +32,7 @@ jobs:
       uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
       with:
         arguments: test
-    - name: Test Reporter
-      uses: dorny/test-reporter@v1.7.0
+    - name: Test Results
+      uses: mikepenz/action-junit-report@v4
       with:
-        name: JEST Tests                  # Name of the check run which will be created
-        path: '**/TEST-*.xml'                     # Path to test results (inside artifact .zip)
-        reporter: java-junit
+        report_paths: '**/build/test-results/**/TEST-*.xml'
