@@ -1,3 +1,6 @@
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.shouldBe
+
 fun main() {
     fun part1(input: List<String>): Int {
         return input.size
@@ -15,3 +18,9 @@ fun main() {
     part1(input).println()
     part2(input).println()
 }
+
+class Day01Test: FunSpec({
+    test("first test") {
+        true shouldBe true
+    }
+})
