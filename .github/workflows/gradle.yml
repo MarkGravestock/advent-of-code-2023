@@ -34,4 +34,7 @@ jobs:
         arguments: test
     - name: Test Reporter
       uses: dorny/test-reporter@v1.7.0
-
+      with:
+        name: JEST Tests                  # Name of the check run which will be created
+        path: '**/TEST-*.xml'                     # Path to test results (inside artifact .zip)
+        reporter: java-junit
