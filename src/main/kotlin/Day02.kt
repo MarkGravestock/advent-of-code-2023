@@ -4,7 +4,7 @@ fun main() {
     }
 
     fun part2(input: List<String>): Int {
-        return CalibrationDocumentPartTwo(input).totalCalibrationValues()
+        return Games(input).calculateTotalPowerOfMinimumCubes()
     }
 
     val testInput = readInput("Day02_test")
