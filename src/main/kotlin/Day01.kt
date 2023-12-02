@@ -1,6 +1,6 @@
 fun main() {
     fun part1(input: List<String>): Int {
-        return CalibrationDocument(input).totalCalibrationValues
+        return CalibrationDocument(input).totalCalibrationValues()
     }
 
     fun part2(input: List<String>): Int {

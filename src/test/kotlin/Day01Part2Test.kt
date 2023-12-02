@@ -13,7 +13,7 @@ class Day01Part2Test: FunSpec ({
             row("abcone2threexyz", "one"),
             row("7pqrstsixteen", "7")
         ) { line, expectedFirstMatch ->
-            val firstMatch = firstMatch(line)
+            val firstMatch = CalibrationDocument.firstMatch(line)
 
             firstMatch shouldBe expectedFirstMatch
         }
@@ -25,7 +25,7 @@ class Day01Part2Test: FunSpec ({
             row("abcone2threexyz", "three"),
             row("7pqrstsixteen", "six")
         ) { line, expectedFirstMatch ->
-            val firstMatch = lastMatch(line)
+            val firstMatch = CalibrationDocument.lastMatch(line)
 
             firstMatch shouldBe expectedFirstMatch
         }
@@ -36,7 +36,7 @@ class Day01Part2Test: FunSpec ({
             row("two", 2),
             row("7", 7),
         ) { line, expectedFirstMatch ->
-            val firstMatch = digitAndWordsMap()[line]
+            val firstMatch = CalibrationDocument.digitAndWordsMap()[line]
 
             firstMatch shouldBe expectedFirstMatch
         }
@@ -48,34 +48,17 @@ class Day01Part2Test: FunSpec ({
             row("abcone2threexyz", 13),
             row("7pqrstsixteen", 76)
         ) { line, expectedValue ->
-            val value = lineValueOfPart2(line)
+            val value = CalibrationDocument.lineValueOfPart2(line)
             value shouldBe expectedValue
         }
     }
 
+    test("it should calculate the total calibration values") {
+        val testInput = readInput("Day01_Part2_test")
+
+        val sut = CalibrationDocument(testInput)
+
+        sut.totalCalibrationValuesPart2() shouldBe 281
+    }
 })
-
-private fun firstMatch(line: String): String {
-    return line.findAnyOf(digitsAndWords())!!.second
-}
-
-private fun lastMatch(line: String): String {
-    return line.findLastAnyOf(digitsAndWords())!!.second
-}
-
-private fun lineValueOfPart2(line: String): Int {
-    val firstValue = 10 * digitAndWordsMap()[firstMatch(line)]!!
-    val secondValue = digitAndWordsMap()[lastMatch(line)]!!
-    return firstValue + secondValue
-}
-
-private fun digitAndWordsMap(): Map<String, Int> {
-    val digitWordsPairs = listOf("one", "two", "three", "four", "five", "six", "seven", "eight", "nine").mapIndexed { index, value -> Pair(value, index + 1) }
-    val digitPairs = (1..9).map { it.toString() }.mapIndexed { index, value -> Pair(value, index + 1) }
-    return digitWordsPairs.union(digitPairs).toMap()
-}
-
-private fun digitsAndWords(): Set<String> {
-    return digitAndWordsMap().keys
-}
 
