@@ -2,10 +2,10 @@ import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 
 class Day02Part2Test : FunSpec({
-    test("can find minimum cubes per game") {
-        val testInput = "Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red"
+    val testLineInput = "Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red"
 
-        val sut = Game(testInput)
+    test("can find minimum cubes per game") {
+        val sut = Game(testLineInput)
 
         val minimumCubes = sut.findMinimumCubes()
 
@@ -15,9 +15,7 @@ class Day02Part2Test : FunSpec({
     }
 
     test("can calculate power of minimum cubes") {
-        val testInput = "Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red"
-
-        val sut = Game(testInput)
+        val sut = Game(testLineInput)
 
         val powerOfMinimumCubes = sut.findMinimumCubes().power()
 
