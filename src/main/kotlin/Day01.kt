@@ -4,7 +4,7 @@ fun main() {
     }
 
     fun part2(input: List<String>): Int {
-        return input.size
+        return CalibrationDocument(input).totalCalibrationValuesPart2()
     }
 
     val testInput = readInput("Day01_test")

@@ -53,12 +53,21 @@ class Day01Part2Test: FunSpec ({
         }
     }
 
-    test("it should calculate the total calibration values") {
+    test("it should calculate the total calibration values for the test values") {
         val testInput = readInput("Day01_Part2_test")
 
         val sut = CalibrationDocument(testInput)
 
         sut.totalCalibrationValuesPart2() shouldBe 281
     }
+
+    test("it should calculate the total calibration values") {
+        val testInput = readInput("Day01")
+
+        val sut = CalibrationDocument(testInput)
+
+        sut.totalCalibrationValuesPart2() shouldBe 54885
+    }
+
 })
 
