@@ -1,10 +1,10 @@
 fun main() {
     fun part1(input: List<String>): Int {
-        return CalibrationDocument(input).totalCalibrationValues()
+        return CalibrationDocumentPartOne(input).totalCalibrationValues()
     }
 
     fun part2(input: List<String>): Int {
-        return CalibrationDocument(input).totalCalibrationValuesPart2()
+        return CalibrationDocumentPartTwo(input).totalCalibrationValues()
     }
 
     val testInput = readInput("Day01_test")

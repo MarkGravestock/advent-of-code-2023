@@ -1,23 +1,46 @@
-class CalibrationDocument(private val testInput: List<String>) {
+class CalibrationDocumentPartOne(testInput: List<String>) : CalibrationDocument(testInput, partOne())
 
-    fun totalCalibrationValuesPart2(): Int {
-        return testInput.sumOf { lineValueOfPart2(it) }
-    }
+class CalibrationDocumentPartTwo(testInput: List<String>) : CalibrationDocument(testInput, partTwo())
 
-    fun firstLineValue(): Int {
-        return lineValueOf(testInput.first())
-    }
+abstract class CalibrationDocument(private val testInput: List<String>, private val textToValues: List<Pair<String, Int>>) {
 
     fun totalCalibrationValues(): Int {
         return testInput.sumOf { lineValueOf(it) }
     }
 
-    private fun lineValueOf(line: String): Int {
+    fun firstLineValue(): Int {
+        return lineValueOfSimple(testInput.first())
+    }
+
+    private fun lineValueOfSimple(line: String): Int {
         return line.first(Char::isDigit).digitToInt() * 10 + line.last(Char::isDigit).digitToInt()
     }
 
-    companion object {
-        fun digitAndWordsMap(): Map<String, Int> {
+    fun firstMatch(line: String): Int {
+        return match(line, CharSequence::findAnyOf)
+    }
+
+    fun lastMatch(line: String): Int {
+        return match(line, CharSequence::findLastAnyOf)
+    }
+
+    private fun match(line: String, matcher: (CharSequence, Set<String>) -> Pair<Int, String>?): Int {
+        return textToValuesMap()[matcher(line, textToValuesMap().keys)!!.second]!!
+    }
+
+    private fun textToValuesMap() = textToValues.toMap()
+
+    fun lineValueOf(line: String): Int {
+        return 10 * firstMatch(line) + lastMatch(line)
+    }
+
+
+    companion object WordToValue {
+        fun partOne(): List<Pair<String, Int>> {
+            return (1..9).map { it.toString() }.toIndexPair()
+        }
+
+        fun partTwo(): List<Pair<String, Int>> {
             val digitWordsPairs = listOf(
                 "one",
                 "two",
@@ -28,30 +51,15 @@ class CalibrationDocument(private val testInput: List<String>) {
                 "seven",
                 "eight",
                 "nine"
-            ).mapIndexed { index, value -> Pair(value, index + 1) }
-            val digitPairs = (1..9).map { it.toString() }.mapIndexed { index, value -> Pair(value, index + 1) }
-            return digitWordsPairs.union(digitPairs).toMap()
+            ).toIndexPair()
+
+            return digitWordsPairs.union(partOne()).toList()
         }
 
-        private fun digitsAndWords(): Set<String> {
-            return digitAndWordsMap().keys
-        }
-
-        fun firstMatch(line: String): String {
-            return line.findAnyOf(digitsAndWords())!!.second
-        }
-
-        fun lastMatch(line: String): String {
-            return line.findLastAnyOf(digitsAndWords())!!.second
-        }
-
-        fun lineValueOfPart2(line: String): Int {
-            val firstValue = 10 * digitAndWordsMap()[firstMatch(line)]!!
-            val secondValue = digitAndWordsMap()[lastMatch(line)]!!
-            return firstValue + secondValue
+        private fun List<String>.toIndexPair(): List<Pair<String, Int>> {
+            return this.mapIndexed { index, value -> Pair(value, index + 1) }
         }
     }
-
 }
 
 

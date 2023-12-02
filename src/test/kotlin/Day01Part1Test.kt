@@ -14,7 +14,7 @@ class Day01Part1Test: FunSpec ({
     test("it should calculate the first calibration value") {
         val testInput = readInput("Day01_test")
 
-        val sut = CalibrationDocument(testInput)
+        val sut = CalibrationDocumentPartOne(testInput)
 
         sut.firstLineValue() shouldBe 12
     }
@@ -22,7 +22,7 @@ class Day01Part1Test: FunSpec ({
     test("it should calculate the total calibration values") {
         val testInput = readInput("Day01_test")
 
-        val sut = CalibrationDocument(testInput)
+        val sut = CalibrationDocumentPartOne(testInput)
 
         sut.totalCalibrationValues() shouldBe 142
     }
@@ -30,7 +30,7 @@ class Day01Part1Test: FunSpec ({
     test("it should calculate the total calibration values for the real file") {
         val testInput = readInput("Day01")
 
-        val sut = CalibrationDocument(testInput)
+        val sut = CalibrationDocumentPartOne(testInput)
 
         sut.totalCalibrationValues() shouldBe 54697
     }

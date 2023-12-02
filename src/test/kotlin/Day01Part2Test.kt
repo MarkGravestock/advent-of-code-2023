@@ -9,11 +9,11 @@ class Day01Part2Test: FunSpec ({
 
     test("it should find the first match") {
         forAll(
-            row(firstLine, "two"),
-            row("abcone2threexyz", "one"),
-            row("7pqrstsixteen", "7")
+            row(firstLine, 2),
+            row("abcone2threexyz", 1),
+            row("7pqrstsixteen", 7)
         ) { line, expectedFirstMatch ->
-            val firstMatch = CalibrationDocument.firstMatch(line)
+            val firstMatch = CalibrationDocumentPartTwo(listOf()).firstMatch(line)
 
             firstMatch shouldBe expectedFirstMatch
         }
@@ -21,22 +21,11 @@ class Day01Part2Test: FunSpec ({
 
     test("it should find the last match") {
         forAll(
-            row(firstLine, "nine"),
-            row("abcone2threexyz", "three"),
-            row("7pqrstsixteen", "six")
+            row(firstLine, 9),
+            row("abcone2threexyz", 3),
+            row("7pqrstsixteen", 6)
         ) { line, expectedFirstMatch ->
-            val firstMatch = CalibrationDocument.lastMatch(line)
-
-            firstMatch shouldBe expectedFirstMatch
-        }
-    }
-
-    test("it should find the value") {
-        forAll(
-            row("two", 2),
-            row("7", 7),
-        ) { line, expectedFirstMatch ->
-            val firstMatch = CalibrationDocument.digitAndWordsMap()[line]
+            val firstMatch = CalibrationDocumentPartTwo(listOf()).lastMatch(line)
 
             firstMatch shouldBe expectedFirstMatch
         }
@@ -48,7 +37,7 @@ class Day01Part2Test: FunSpec ({
             row("abcone2threexyz", 13),
             row("7pqrstsixteen", 76)
         ) { line, expectedValue ->
-            val value = CalibrationDocument.lineValueOfPart2(line)
+            val value = CalibrationDocumentPartTwo(listOf()).lineValueOf(line)
             value shouldBe expectedValue
         }
     }
@@ -56,17 +45,17 @@ class Day01Part2Test: FunSpec ({
     test("it should calculate the total calibration values for the test values") {
         val testInput = readInput("Day01_Part2_test")
 
-        val sut = CalibrationDocument(testInput)
+        val sut = CalibrationDocumentPartTwo(testInput)
 
-        sut.totalCalibrationValuesPart2() shouldBe 281
+        sut.totalCalibrationValues() shouldBe 281
     }
 
     test("it should calculate the total calibration values") {
         val testInput = readInput("Day01")
 
-        val sut = CalibrationDocument(testInput)
+        val sut = CalibrationDocumentPartTwo(testInput)
 
-        sut.totalCalibrationValuesPart2() shouldBe 54885
+        sut.totalCalibrationValues() shouldBe 54885
     }
 
 })
