@@ -67,6 +67,11 @@ class Day03Part1Test : FunSpec ({
             val actual = sut.doesCandidateMatch(CandidatePartNumber(PartNumber(633, lineNumber = 2, start = 6, end = 8), Bounds(height = IntRange(1, 3), width = IntRange(5, 9))))
             actual shouldBe true
         }
+
+        test("It can calculate total of valid part numbers") {
+            sut.totalOfValidPartNumbers() shouldBe 4361
+        }
+
     }
 })
 
@@ -95,11 +100,15 @@ class EngineSchematic(private val fileInput: List<String>) {
             .also { it.log() }
             .any { it.any { it.isSymbol() } }
     }
+
+    fun totalOfValidPartNumbers(): Int {
+        return candidateNumbers().filter { doesCandidateMatch(it) }.sumOf { it.partNumber.value }
+    }
 }
 
 class Bounds(val height: IntRange, val width: IntRange)
 
-class CandidatePartNumber(private val partNumber: PartNumber, private val bounds: Bounds) {
+class CandidatePartNumber(val partNumber: PartNumber, private val bounds: Bounds) {
     fun bounds() : Bounds {
         val height = IntRange(maxOf(partNumber.lineNumber - 1, bounds.height.first), minOf(partNumber.lineNumber + 1, bounds.height.last))
         return Bounds(width = lineBounds(), height = height)
