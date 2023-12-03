@@ -1,6 +1,5 @@
 package day03
 
-import log
 import println
 
 class EngineSchematic(private val fileInput: List<String>) {
@@ -17,32 +16,34 @@ class EngineSchematic(private val fileInput: List<String>) {
         return Bounds(IntRange(0, fileInput.size - 1), IntRange(0, fileInput.first().length - 1))
     }
 
-    fun doesCandidateMatch(candidatePartNumber: CandidatePartNumber): Boolean {
-        val bounds = candidatePartNumber.bounds()
-        return fileInput.subList(bounds.height.first, bounds.height.last + 1)
-            .map { it.subSequence(bounds.width.first, bounds.width.last + 1) }
-            .also { it.log() }
-            .any {
-                it.any { char -> char.isSymbol() }
-            }
+    fun doesCandidateMatch(candidatePartNumber: CandidatePartNumber): SymbolMatch? {
+        return doesCandidateMatch(candidatePartNumber) { x -> x.isSymbol() };
     }
 
     fun doesCandidateMatchSecond(candidatePartNumber: CandidatePartNumber): SymbolMatch? {
+        return doesCandidateMatch(candidatePartNumber) { x -> x == '*' }
+    }
+
+    private fun doesCandidateMatch(candidatePartNumber: CandidatePartNumber, characterMatcher: (Char) -> Boolean): SymbolMatch? {
         val bounds = candidatePartNumber.bounds()
         return fileInput.subList(bounds.height.first, bounds.height.last + 1)
             .mapIndexed { index, it -> it.subSequence(bounds.width.first, bounds.width.last + 1) to index }
             .flatMap { it.first.flatMapIndexed { columnIndex, char -> listOf(Triple(char, it.second, columnIndex)) } }
             .also { it.println() }
-            .mapNotNull{ if (it.first == '*') SymbolMatch(row = it.second + bounds.height.first, column =  it.third + bounds.width.first, candidatePartNumber) else null }
+            .mapNotNull{ if (characterMatcher.invoke(it.first)) SymbolMatch(row = it.second + bounds.height.first, column =  it.third + bounds.width.first, candidatePartNumber) else null }
             .singleOrNull()
     }
 
     fun totalOfValidPartNumbers(): Int {
-        return candidateNumbers().filter { doesCandidateMatch(it) }.sumOf { it.partNumber.value }
+        return candidateNumbers().mapNotNull { doesCandidateMatch(it) }.sumOf { it.candidatePartNumber.partNumber.value }
+    }
+
+    fun findCandidateGears(): Map<Pair<Int, Int>, List<SymbolMatch>> {
+        return candidateNumbers().mapNotNull { doesCandidateMatchSecond(it) }.groupBy { Pair(it.row, it.column) }
     }
 
     fun findGears(): Iterable<Gears> {
-        return candidateNumbers().mapNotNull { doesCandidateMatchSecond(it) }.groupBy { Pair(it.row, it.column) }.filterValues { it.size == 2 }.map { Gears(it.value.first().candidatePartNumber, it.value[1].candidatePartNumber, it.key) }
+        return  findCandidateGears().filterValues { it.size == 2 }.map { Gears(it.value.first().candidatePartNumber, it.value[1].candidatePartNumber, it.key) }
     }
 
     fun totalGearRatios(): Int {

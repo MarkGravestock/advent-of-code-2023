@@ -1,6 +1,7 @@
 import day03.*
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.maps.shouldHaveSize
 import io.kotest.matchers.shouldBe
 
 class Day03Part2Test : FunSpec({
@@ -19,6 +20,11 @@ class Day03Part2Test : FunSpec({
             sut.findGears() shouldHaveSize 2
         }
 
+        test("It can find candidate gears") {
+            sut.findCandidateGears().filter { it.value.size == 1 } shouldHaveSize 1
+        }
+
+
         test("It can calculate gear ratio") {
             sut.findGears().first().ratio shouldBe 16345
         }
@@ -35,6 +41,10 @@ class Day03Part2Test : FunSpec({
 
         test("Contains expected Total gear ratios") {
             sut.totalGearRatios() shouldBe 75519888
+        }
+
+        test("It can find candidate gears") {
+            sut.findCandidateGears().filter { it.value.size == 3 } shouldHaveSize 0
         }
     }
 })

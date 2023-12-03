@@ -2,6 +2,7 @@ import day03.*
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 
 class Day03Part1Test : FunSpec({
     context("Schematic line") {
@@ -66,7 +67,7 @@ class Day03Part1Test : FunSpec({
 
         test("It can check adjacent symbol") {
             val actual = sut.doesCandidateMatch(CandidatePartNumber(PartNumber(633, lineNumber = 2, start = 6, end = 8), Bounds(height = IntRange(1, 3), width = IntRange(5, 9))))
-            actual shouldBe true
+            actual shouldNotBe null
         }
 
         test("It can calculate total of valid part numbers") {
