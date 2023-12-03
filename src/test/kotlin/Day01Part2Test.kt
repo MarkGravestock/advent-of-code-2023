@@ -1,3 +1,4 @@
+import day01.CalibrationDocumentPartTwo
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.data.forAll
 import io.kotest.data.row

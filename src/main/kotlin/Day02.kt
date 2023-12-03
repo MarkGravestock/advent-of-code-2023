@@ -1,3 +1,6 @@
+import day02.Game
+import day02.Games
+
 fun main() {
     fun part1(input: List<String>): Int {
         return Games(input).getTotalPossibleIdsForCubes(Game.Cubes.default())

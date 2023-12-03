@@ -1,3 +1,6 @@
+import day01.CalibrationDocumentPartOne
+import day01.CalibrationDocumentPartTwo
+
 fun main() {
     fun part1(input: List<String>): Int {
         return CalibrationDocumentPartOne(input).totalCalibrationValues()

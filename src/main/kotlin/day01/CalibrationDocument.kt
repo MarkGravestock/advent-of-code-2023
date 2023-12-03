@@ -1,4 +1,6 @@
-import CalibrationDocumentPartOne.Companion.partOne
+package day01
+
+import day01.CalibrationDocumentPartOne.Companion.partOne
 
 class CalibrationDocumentPartOne(testInput: List<String>) : CalibrationDocument(testInput, partOne())
 {

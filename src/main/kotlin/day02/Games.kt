@@ -1,3 +1,5 @@
+package day02
+
 class Games(private val testInput: List<String>) {
     fun getTotalPossibleIdsForCubes(cubes: Game.Cubes): Int {
         return testInput.map { Game(it) }.filter { it.isPossibleFor(cubes) }.map { it.number() }.sum()

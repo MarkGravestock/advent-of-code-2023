@@ -1,3 +1,5 @@
+import day02.Game
+import day02.Games
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 
