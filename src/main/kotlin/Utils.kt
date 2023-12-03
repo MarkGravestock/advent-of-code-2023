@@ -21,4 +21,4 @@ fun String.md5() = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteA
 fun Any?.println() = println(this)
 
 const val logEnabled = true
-fun Any?.log() = println(this)
+fun Any?.log(): () -> Unit = { if (logEnabled) this.println() else Unit }

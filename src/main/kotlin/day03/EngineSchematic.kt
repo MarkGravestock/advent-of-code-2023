@@ -1,6 +1,7 @@
 package day03
 
 import log
+import println
 
 class EngineSchematic(private val fileInput: List<String>) {
     fun lines(): Int {
@@ -26,17 +27,41 @@ class EngineSchematic(private val fileInput: List<String>) {
             }
     }
 
+    fun doesCandidateMatchSecond(candidatePartNumber: CandidatePartNumber): SymbolMatch? {
+        val bounds = candidatePartNumber.bounds()
+        return fileInput.subList(bounds.height.first, bounds.height.last + 1)
+            .mapIndexed { index, it -> it.subSequence(bounds.width.first, bounds.width.last + 1) to index }
+            .flatMap { it.first.flatMapIndexed { columnIndex, char -> listOf(Triple(char, it.second, columnIndex)) } }
+            .also { it.println() }
+            .mapNotNull{ if (it.first == '*') SymbolMatch(row = it.second + bounds.height.first, column =  it.third + bounds.width.first, candidatePartNumber) else null }
+            .singleOrNull()
+    }
+
     fun totalOfValidPartNumbers(): Int {
         return candidateNumbers().filter { doesCandidateMatch(it) }.sumOf { it.partNumber.value }
     }
+
+    fun findGears(): Iterable<Gears> {
+        return candidateNumbers().mapNotNull { doesCandidateMatchSecond(it) }.groupBy { Pair(it.row, it.column) }.filterValues { it.size == 2 }.map { Gears(it.value.first().candidatePartNumber, it.value[1].candidatePartNumber, it.key) }
+    }
+
+    fun totalGearRatios(): Int {
+        return findGears().sumOf { it.ratio }
+    }
 }
+
+data class Gears(val firstPartNumber: CandidatePartNumber, val secondPartNumber: CandidatePartNumber, val value: Pair<Int,Int>) {
+    val ratio: Int = firstPartNumber.partNumber.value * secondPartNumber.partNumber.value
+}
+
+data class SymbolMatch(val row: Int, val column: Int, val candidatePartNumber: CandidatePartNumber)
 
 fun Char.isSymbol(): Boolean {
     return !(this.isDigit() || this == '.')
 }
 
-
 class Bounds(val height: IntRange, val width: IntRange)
+
 class CandidatePartNumber(val partNumber: PartNumber, private val bounds: Bounds) {
     fun bounds(): Bounds {
         val height = IntRange(maxOf(partNumber.lineNumber - 1, bounds.height.first), minOf(partNumber.lineNumber + 1, bounds.height.last))
