@@ -6,7 +6,7 @@ class Day03Part1Test : FunSpec ({
     context("Schematic line") {
 
         val line = "..35..633."
-        val sut = EngineSchematicLine(line)
+        val sut = EngineSchematicLine(line, 0)
 
         test("It can find part numbers") {
 
@@ -34,15 +34,27 @@ class Day03Part1Test : FunSpec ({
             sut.lines() shouldBe 10
         }
 
-        test("It can calculate bounds") {
+        test("It can calculate schematic bounds") {
             sut.bounds().height.first shouldBe 0
             sut.bounds().height.last shouldBe 9
             sut.bounds().width.first shouldBe 0
             sut.bounds().width.last shouldBe 9
         }
 
-        test("It calculate the bounds of the first one") {
-            sut.candidateNumbers().first().lineBounds().first shouldBe 0
+        test("It calculate the line bounds of the first candidate") {
+
+            val lineBounds = sut.candidateNumbers().first().lineBounds()
+
+            lineBounds.first shouldBe 0
+            lineBounds.last shouldBe 3
+        }
+
+        test("It calculate the height bounds of the first candidate") {
+
+            val heightBounds = sut.candidateNumbers().first().bounds().height
+
+            heightBounds.first shouldBe 0
+            heightBounds.last shouldBe 1
         }
     }
 
@@ -54,7 +66,7 @@ class EngineSchematic(private val fileInput: List<String>) {
     }
 
     fun candidateNumbers(): Iterable<CandidatePartNumber> {
-        return fileInput.flatMap { EngineSchematicLine(it).partNumbers() }.map{ CandidatePartNumber(it) }
+        return fileInput.flatMapIndexed { index, it ->  EngineSchematicLine(it, index).partNumbers() }.map{ CandidatePartNumber(it, bounds()) }
     }
 
     fun bounds(): Bounds {
@@ -64,19 +76,23 @@ class EngineSchematic(private val fileInput: List<String>) {
 
 class Bounds(val height: IntRange, val width: IntRange)
 
-class CandidatePartNumber(val partNumber: PartNumber) {
-    fun lineBounds() : IntRange {
-        return IntRange(10, 0)
+class CandidatePartNumber(private val partNumber: PartNumber, private val bounds: Bounds) {
+    fun bounds() : Bounds {
+        val height = IntRange(maxOf(partNumber.lineNumber - 1, bounds.height.first), minOf(partNumber.lineNumber + 1, bounds.height.last))
+        return Bounds(width = lineBounds(), height = height)
     }
 
+    fun lineBounds() : IntRange {
+        return IntRange(maxOf(partNumber.start - 1, bounds.width.first), minOf(partNumber.end + 1, bounds.width.last))
+    }
 }
 
-class EngineSchematicLine(private val line: String) {
+class EngineSchematicLine(private val line: String, private val lineNumber: Int) {
     fun partNumbers(): Iterable<PartNumber> {
         val regex = "(\\d+)".toRegex()
         val matches = regex.findAll(line)
-        return matches.map { PartNumber(it.value.toInt(), it.range.first, it.range.last) }.asIterable()
+        return matches.map { PartNumber(it.value.toInt(), it.range.first, it.range.last, lineNumber) }.asIterable()
     }
 }
 
-class PartNumber(val value: Int, val start: Int, val end: Int)
+class PartNumber(val value: Int, val start: Int, val end: Int, val lineNumber: Int)
