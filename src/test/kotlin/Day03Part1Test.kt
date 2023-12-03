@@ -47,6 +47,9 @@ class Day03Part1Test : FunSpec ({
 
             lineBounds.first shouldBe 0
             lineBounds.last shouldBe 3
+
+            val lastHeightBounds = sut.candidateNumbers().last().bounds().width
+            lastHeightBounds shouldBe IntRange(4, 8)
         }
 
         test("It calculate the height bounds of the first candidate") {
@@ -55,10 +58,21 @@ class Day03Part1Test : FunSpec ({
 
             heightBounds.first shouldBe 0
             heightBounds.last shouldBe 1
+
+            val lastHeightBounds = sut.candidateNumbers().last().bounds().height
+            lastHeightBounds shouldBe IntRange(8, 9)
+        }
+
+        test("It can check adjacent symbol") {
+            val actual = sut.doesCandidateMatch(CandidatePartNumber(PartNumber(633, lineNumber = 2, start = 6, end = 8), Bounds(height = IntRange(1, 3), width = IntRange(5, 9))))
+            actual shouldBe true
         }
     }
-
 })
+
+private fun Char.isSymbol(): Boolean {
+    return !(this.isDigit() || this == '.')
+}
 
 class EngineSchematic(private val fileInput: List<String>) {
     fun lines(): Int {
@@ -66,11 +80,20 @@ class EngineSchematic(private val fileInput: List<String>) {
     }
 
     fun candidateNumbers(): Iterable<CandidatePartNumber> {
-        return fileInput.flatMapIndexed { index, it ->  EngineSchematicLine(it, index).partNumbers() }.map{ CandidatePartNumber(it, bounds()) }
+        return fileInput.flatMapIndexed { index, it ->  EngineSchematicLine(it, index).partNumbers() }
+            .map{ CandidatePartNumber(it, bounds()) }
     }
 
     fun bounds(): Bounds {
         return Bounds(IntRange(0, fileInput.size - 1), IntRange(0, fileInput.first().length - 1))
+    }
+
+    fun doesCandidateMatch(candidatePartNumber: CandidatePartNumber) : Boolean {
+        val bounds = candidatePartNumber.bounds()
+        return fileInput.subList(bounds.height.first, bounds.height.last + 1)
+            .map { it.subSequence(bounds.width.first, bounds.width.last + 1) }
+            .also { it.log() }
+            .any { it.any { it.isSymbol() } }
     }
 }
 
@@ -96,3 +119,4 @@ class EngineSchematicLine(private val line: String, private val lineNumber: Int)
 }
 
 class PartNumber(val value: Int, val start: Int, val end: Int, val lineNumber: Int)
+
