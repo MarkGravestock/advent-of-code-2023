@@ -30,9 +30,19 @@ class Day03Part1Test : FunSpec ({
         val fileInput = readInput("Day03_test")
         val sut = EngineSchematic(fileInput)
 
-        test("It can find part numbers") {
-
+        test("It can count lines") {
             sut.lines() shouldBe 10
+        }
+
+        test("It can calculate bounds") {
+            sut.bounds().height.first shouldBe 0
+            sut.bounds().height.last shouldBe 9
+            sut.bounds().width.first shouldBe 0
+            sut.bounds().width.last shouldBe 9
+        }
+
+        test("It calculate the bounds of the first one") {
+            sut.candidateNumbers().first().lineBounds().first shouldBe 0
         }
     }
 
@@ -41,6 +51,22 @@ class Day03Part1Test : FunSpec ({
 class EngineSchematic(private val fileInput: List<String>) {
     fun lines(): Int {
         return fileInput.size
+    }
+
+    fun candidateNumbers(): Iterable<CandidatePartNumber> {
+        return fileInput.flatMap { EngineSchematicLine(it).partNumbers() }.map{ CandidatePartNumber(it) }
+    }
+
+    fun bounds(): Bounds {
+        return Bounds(IntRange(0, fileInput.size - 1), IntRange(0, fileInput.first().length - 1))
+    }
+}
+
+class Bounds(val height: IntRange, val width: IntRange)
+
+class CandidatePartNumber(val partNumber: PartNumber) {
+    fun lineBounds() : IntRange {
+        return IntRange(10, 0)
     }
 
 }
