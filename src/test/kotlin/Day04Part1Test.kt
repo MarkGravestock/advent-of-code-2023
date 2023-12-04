@@ -8,7 +8,7 @@ import io.kotest.matchers.shouldBe
 class Day04Part1Test : FunSpec({
     val day = 4
 
-    context("Scratchcard line") {
+    context("Scratchcard Line") {
 
         val line = "Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53"
         val sut = Scratchcard(line)
@@ -34,9 +34,9 @@ class Day04Part1Test : FunSpec({
         }
     }
 
-    context("Schematic File") {
+    context("Scratchcard Test File") {
 
-        val fileInput = readInput("Day04_test")
+        val fileInput = readTestInputForDay(day)
         val sut = Scratchcards(fileInput)
 
         test("It can count lines") {
@@ -53,7 +53,7 @@ class Day04Part1Test : FunSpec({
     }
 
     context("Real File Assertions") {
-        val fileInput = readInput("Day04")
+        val fileInput = readInputForDay(day)
         val sut = Scratchcards(fileInput)
 
         test("It can count lines") {

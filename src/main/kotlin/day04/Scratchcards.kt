@@ -55,13 +55,14 @@ class Scratchcard(private val line: String) {
     }
 
     fun winningNumbers(): Set<Int> {
-        line.println()
-        return extractParts()[2].split(" ").filter { it.isNotBlank() }.map { it.toInt() }.toHashSet()
+        return extractNumbersFromGroup(2)
     }
 
     fun cardNumbers(): Set<Int> {
-        return extractParts()[3].split(" ").filter { it.isNotBlank() }.map { it.toInt() }.toHashSet()
+        return extractNumbersFromGroup(3)
     }
+
+    private fun extractNumbersFromGroup(group: Int) = extractParts()[group].split(" ").filter { it.isNotBlank() }.map { it.toInt() }.toHashSet()
 
     fun cardWinningNumbers(): Set<Int> {
         return winningNumbers() intersect cardNumbers()

@@ -8,7 +8,6 @@ import io.kotest.matchers.shouldBe
 
 class Day04Part2Test : FunSpec({
     val day = 4
-    val fileNameBase = "Day0${day}"
 
     context("Scratchcard line") {
 
@@ -22,7 +21,7 @@ class Day04Part2Test : FunSpec({
 
     context("Scratchcards File") {
 
-        val fileInput = readInput("${fileNameBase}_test")
+        val fileInput = readTestInputForDay(day)
         val sut = Scratchcards(fileInput)
 
         test("It can calculate scratchcards won") {
@@ -40,7 +39,7 @@ class Day04Part2Test : FunSpec({
     }
 
     context("Real File Assertions") {
-        val fileInput = readInput(fileNameBase)
+        val fileInput = readTestInputForDay(day)
         val sut = Scratchcards(fileInput)
 
         test("It can calculate total scratchcards won") {
