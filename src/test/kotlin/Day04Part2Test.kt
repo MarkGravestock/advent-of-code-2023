@@ -1,6 +1,8 @@
+import day04.OriginalToCopies
 import day04.Scratchcard
 import day04.Scratchcards
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
 
@@ -24,12 +26,16 @@ class Day04Part2Test : FunSpec({
         val sut = Scratchcards(fileInput)
 
         test("It can calculate scratchcards won") {
-            sut.scratchcardsWon().first() shouldContainExactlyInAnyOrder listOf(2, 3, 4, 5)
-            sut.scratchcardsWon().last() shouldBe emptyList()
+            sut.scratchcardsWon().first().copiesCardNumbers shouldContainExactlyInAnyOrder listOf(2, 3, 4, 5)
+            sut.scratchcardsWon().last() shouldBe OriginalToCopies(6, emptyList())
         }
 
-        test("It can calculate total points") {
-            sut.totalPoints() shouldBe 13
+        test("It can calculate the copies of a scratchcard won") {
+            sut.originalAndCopyScratchcardsWon().values shouldContainExactly listOf(1, 2, 4, 8, 14, 1)
+        }
+
+        test("It can calculate total scratchcards won") {
+            sut.totalScratchcardsWon() shouldBe 30
         }
     }
 
