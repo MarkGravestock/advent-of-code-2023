@@ -1,8 +1,9 @@
+import day04.Scratchcard
+import day04.Scratchcards
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
-import kotlin.math.pow
 
 class Day04Part1Test : FunSpec({
     val day = 4
@@ -28,7 +29,7 @@ class Day04Part1Test : FunSpec({
             sut.cardWinningNumbers() shouldContainExactlyInAnyOrder setOf(48, 83, 17, 86)
         }
 
-        test("It can find the card winning numbers") {
+        test("It can find the card points") {
             sut.points() shouldBe 8
         }
     }
@@ -74,45 +75,4 @@ class Day04Part1Test : FunSpec({
         }
     }
 })
-
-class Scratchcards(private val fileInput: List<String>) {
-    fun lines(): Int {
-        return fileInput.size
-    }
-
-    fun totalPoints(): Int {
-        return points().sum()
-    }
-
-    fun points(): List<Int> {
-        return fileInput.map{ Scratchcard(it).points() }
-    }
-
-}
-
-class Scratchcard(private val line: String) {
-
-    private fun extractParts() = ("Card\\s+(\\d+): (.*) \\| (.*)".toRegex()).find(line)!!.groupValues
-
-    fun lineNumber(): Int {
-        return extractParts()[1].toInt()
-    }
-
-    fun winningNumbers(): Set<Int> {
-        line.println()
-        return extractParts()[2].split(" ").filter { it.isNotBlank() }.map { it.toInt() }.toHashSet()
-    }
-
-    fun cardNumbers(): Set<Int> {
-        return extractParts()[3].split(" ").filter { it.isNotBlank() }.map { it.toInt() }.toHashSet()
-    }
-
-    fun cardWinningNumbers(): Set<Int> {
-        return winningNumbers() intersect cardNumbers()
-    }
-
-    fun points(): Int {
-        return 2.0.pow(cardWinningNumbers().size - 1).toInt()
-    }
-}
 
