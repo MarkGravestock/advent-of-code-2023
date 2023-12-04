@@ -43,8 +43,8 @@ class Day04Part2Test : FunSpec({
         val fileInput = readInput(fileNameBase)
         val sut = Scratchcards(fileInput)
 
-        test("It can calculate total points") {
-            sut.totalPoints() shouldBe 20667
+        test("It can calculate total scratchcards won") {
+            sut.totalScratchcardsWon() shouldBe 5833065
         }
     }
 })
