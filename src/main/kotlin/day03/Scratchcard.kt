@@ -17,7 +17,7 @@ class EngineSchematic(private val fileInput: List<String>) {
     }
 
     fun doesCandidateMatch(candidatePartNumber: CandidatePartNumber): SymbolMatch? {
-        return doesCandidateMatch(candidatePartNumber) { x -> x.isSymbol() };
+        return doesCandidateMatch(candidatePartNumber) { x -> x.isSymbol() }
     }
 
     fun doesCandidateMatchSecond(candidatePartNumber: CandidatePartNumber): SymbolMatch? {
