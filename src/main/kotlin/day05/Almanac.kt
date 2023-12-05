@@ -58,9 +58,8 @@ class Almanac(private val fileInput: List<String>) {
 
 class Mapping(val destinationRangeStart: Long, val sourceRangeStart: Long, val rangeLength: Long) {
 
-    private val range = LongRange(start = sourceRangeStart, endInclusive = sourceRangeStart + rangeLength - 1)
     fun canMap(value: Long): Boolean {
-        return range.contains(value)
+        return value >= sourceRangeStart && value < sourceRangeStart + rangeLength
     }
 
     fun mappedValue(value: Long): Long {
