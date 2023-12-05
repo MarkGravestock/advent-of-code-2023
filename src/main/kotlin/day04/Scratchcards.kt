@@ -1,6 +1,5 @@
 package day04
 
-import println
 import kotlin.math.pow
 
 class Scratchcards(private val fileInput: List<String>) {
@@ -18,7 +17,6 @@ class Scratchcards(private val fileInput: List<String>) {
 
     fun scratchcardsWon(): List<OriginalToCopies> {
         return fileInput.map{ Scratchcard(it).cardsWon() }
-            .also { it.println() }
             .mapIndexed { index, value -> OriginalToCopies(index + 1,  IntRange(index + 2, minOf(index +  1 + value, fileInput.size)).toList()) }
     }
 
@@ -27,17 +25,16 @@ class Scratchcards(private val fileInput: List<String>) {
     }
 
     fun originalAndCopyScratchcardsWon(): Map<Int, Int> {
-        val originalToCopies = scratchcardsWon().associate { it.originalCardNumber to it.copiesCardNumbers }
+        val originalScratchcardsWon = scratchcardsWon()
 
-        val originalScratchcards = scratchcardsWon().map { it.originalCardNumber }
+        var toAdd = originalScratchcardsWon.map { it.originalCardNumber }
 
-        val allScratchcards = mutableListOf<Int>().apply { addAll(originalScratchcards) }
+        val originalToCopies = originalScratchcardsWon.associate { it.originalCardNumber to it.copiesCardNumbers }
 
-        var copiesWon = scratchcardsWon().flatMap { it.copiesCardNumbers }
-
-        while (copiesWon.isNotEmpty()) {
-            allScratchcards.addAll(copiesWon)
-            copiesWon = copiesWon.mapNotNull { originalToCopies[it] }.flatten()
+        val allScratchcards = mutableListOf<Int>()
+        while (toAdd.isNotEmpty()) {
+            allScratchcards.addAll(toAdd)
+            toAdd = toAdd.mapNotNull { originalToCopies[it] }.flatten()
         }
 
         return allScratchcards.groupingBy { it }.eachCount()

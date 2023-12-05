@@ -39,7 +39,7 @@ class Day04Part2Test : FunSpec({
     }
 
     context("Real File Assertions") {
-        val fileInput = readTestInputForDay(day)
+        val fileInput = readInputForDay(day)
         val sut = Scratchcards(fileInput)
 
         test("It can calculate total scratchcards won") {
