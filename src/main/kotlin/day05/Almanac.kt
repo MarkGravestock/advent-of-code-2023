@@ -42,6 +42,18 @@ class Almanac(private val fileInput: List<String>) {
         return seeds().minOf { mapOriginalSourceOf(it) }
     }
 
+    fun seedRanges(): List<LongRange> {
+        return seeds().windowed(size = 2, step = 2).map { LongRange(it.first().toLong(), it.first().toLong() + it[1] - 1) }
+    }
+
+    fun seedsFromRanges(): List<Long> {
+        return seedRanges().flatMap { it.toList() }
+    }
+
+    fun findLowestFinalDestinationFromRanges(): Long {
+        return seedsFromRanges().minOf { mapOriginalSourceOf(it) }
+    }
+
 }
 
 class Mapping(val destinationRangeStart: Long, val sourceRangeStart: Long, val rangeLength: Long) {
