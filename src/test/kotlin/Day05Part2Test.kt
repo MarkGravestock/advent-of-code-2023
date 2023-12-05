@@ -23,6 +23,7 @@ class Day05Part2Test : FunSpec({
 
         test("It can find lowest final destination") {
             sut.findLowestFinalDestinationFromRanges() shouldBe 46
+            sut.findLowestFinalDestinationFromRangesUsingLoop() shouldBe 46
         }
     }
 
@@ -32,9 +33,9 @@ class Day05Part2Test : FunSpec({
         val sut = Almanac(fileInput)
 
         test("It can find lowest final destination") {
-          //  sut.findLowestFinalDestinationFromRanges() shouldBe 240320250
+            sut.seedRanges() shouldHaveSize 10
+            sut.findLowestFinalDestinationFromRangesUsingLoop() shouldBe 28580589
         }
     }
-
 })
 
