@@ -5,8 +5,8 @@ import io.kotest.matchers.shouldBe
 
 // https://adventofcode.com/2023/day/6
 
-class BoatRaceOption(val raceTime: Int, val holdButtonTime: Int, val recordDistance: Int) {
-    fun distance(): Int {
+class BoatRaceOption(val raceTime: Long, val holdButtonTime: Long, val recordDistance: Long) {
+    fun distance(): Long {
         val travelTime = raceTime - holdButtonTime
         val velocity = holdButtonTime
         return travelTime * velocity
@@ -23,9 +23,9 @@ class Day06Part1Test : FunSpec({
     context("Boat Race tactics") {
         test("It can calculate the distance") {
             forAll(
-                row(0, 0),
-                row(3, 12),
-                row(7, 0)
+                row(0L, 0L),
+                row(3L, 12L),
+                row(7L, 0L)
             ) { holdTime, expectedDistance ->
                 BoatRaceOption(raceTime = 7, holdButtonTime = holdTime, recordDistance = 9).distance() shouldBe expectedDistance
             }
@@ -33,9 +33,9 @@ class Day06Part1Test : FunSpec({
 
         test("It can determine if its a record") {
             forAll(
-                row(0, false),
-                row(3, true),
-                row(7, false)
+                row(0L, false),
+                row(3L, true),
+                row(7L, false)
             ) { holdTime, isRecord ->
                 BoatRaceOption(raceTime = 7, holdButtonTime = holdTime, recordDistance = 9).isRecord() shouldBe isRecord
             }
@@ -61,24 +61,54 @@ class Day06Part1Test : FunSpec({
 
             sut.numberOfWinningWays() shouldBe 2374848
         }
+
+        test("It can find number of ways to beat the record for the 2nd part") {
+            val fileInput = readTestInputForDay(6)
+            val sut = BoatRaces(fileInput.map { it.replace("\\s".toRegex(), "") })
+
+            sut.numberOfWinningWays() shouldBe 71503
+        }
+
+        test("It can find number of ways to beat the record for the real 2nd part") {
+            val fileInput = readInputForDay(6)
+            val sut = BoatRaces(fileInput.map { it.replace("\\s".toRegex(), "") })
+
+            sut.numberOfWinningWays() shouldBe 39132886
+        }
+
     }
 })
 
-class BoatRaces(val fileInput: List<String>) {
-    fun numberOfWinningWays(): Int {
-        val regex = "(\\d+)".toRegex()
-        val times = regex.findAll(fileInput[0]).map{ it.value.toInt() }
-        val distances = regex.findAll(fileInput[1]).map{ it.value.toInt() }
-        return times.zip(distances).map { BoatRace(it.first, it.second).winningWays() }.reduce { acc, i -> acc * i }
+class BoatRaces(private val fileInput: List<String>) {
+    private val regex = "(\\d+)".toRegex()
+
+    private fun extractNumbers(source: String): Sequence<Long> {
+        return regex.findAll(source).map { it.value.toLong() }
     }
 
+    fun numberOfWinningWays(): Long {
+        val times = extractNumbers(fileInput[0])
+        val distances = extractNumbers(fileInput[1])
+
+        return times.zip(distances)
+            .map { BoatRace(it.first, it.second).winningWays() }
+            .reduce { acc, i -> acc * i }
+    }
 }
 
-class BoatRace(val raceTime: Int, val recordDistance: Int) {
-    fun winningWays(): Int {
+class BoatRace(val raceTime: Long, val recordDistance: Long) {
+    fun winningWays(): Long {
         return (1..raceTime).asSequence()
             .filter { BoatRaceOption(raceTime, holdButtonTime = it, recordDistance).isRecord() }
-            .count()
+            .countLong()
+    }
+
+    private fun <T> Sequence<T>.countLong(): Long {
+        var count = 0L
+        for (item in this) {
+            count++
+        }
+        return count
     }
 }
 
