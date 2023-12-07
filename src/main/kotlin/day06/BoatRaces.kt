@@ -1,5 +1,7 @@
 package day06
 
+import parseNumbers
+
 class BoatRaceOption(val raceTime: Long, val holdButtonTime: Long, val recordDistance: Long) {
     fun distance(): Long {
         val travelTime = raceTime - holdButtonTime
@@ -10,19 +12,13 @@ class BoatRaceOption(val raceTime: Long, val holdButtonTime: Long, val recordDis
     fun isRecord(): Boolean {
         return distance() > recordDistance
     }
-
 }
 
 class BoatRaces(private val fileInput: List<String>) {
-    private val regex = "(\\d+)".toRegex()
-
-    private fun extractNumbers(source: String): Sequence<Long> {
-        return regex.findAll(source).map { it.value.toLong() }
-    }
 
     fun numberOfWinningWays(): Long {
-        val times = extractNumbers(fileInput[0])
-        val distances = extractNumbers(fileInput[1])
+        val times = fileInput[0].parseNumbers()
+        val distances = fileInput[1].parseNumbers()
 
         return times.zip(distances)
             .map { BoatRace(it.first, it.second).winningWays() }
