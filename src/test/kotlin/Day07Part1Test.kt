@@ -25,11 +25,9 @@ class Day07Part1Test : FunSpec({
         }
         test("It can calculate the stronger hand") {
             forAll(
-                row("33332", "2AAAA", true),
-                row("77888", "77788", true),
-            ) { first, second, stronger ->
-                Hand(first).isStrongerThan(Hand(second)) shouldBe stronger
-
+                row("33332", "2AAAA"),
+                row("77888", "77788"),
+            ) { first, second ->
                 Hand(first).rank() shouldBeGreaterThan Hand(second).rank()
             }
         }

@@ -1,8 +1,10 @@
 import kotlin.math.pow
 
-class Hands(private val fileInput: List<String>) {
+class Hands(private val fileInput: List<String>, val rules: Rules = Rules.Part1 ) {
     fun rank(): List<Hand> {
-        return fileInput.map { it.split(" ") }.map { Hand(it[0], it[1].toInt()) }.sortedWith(compareBy<Hand>{ it.type().rank }.thenBy { it.rank() })
+        return fileInput.map { it.split(" ") }
+            .map { Hand(it[0], it[1].toInt(), rules) }
+            .sortedWith(compareBy<Hand>{ it.type().rank }.thenBy { it.rank() })
     }
 
     fun totalWinnings(): Int {
@@ -10,24 +12,31 @@ class Hands(private val fileInput: List<String>) {
     }
 }
 
-data class Hand(private val hand: String, val bid: Int = 0) {
+data class Hand(private val hand: String, val bid: Int = 0, val rules: Rules = Rules.Part1) {
     fun type(): HandType {
-        val groupedCards = hand.groupBy { it }
+        if (hand == "JJJJJ") return HandType.FiveOfAKind
+
+        val groupedCards = hand.groupBy { it }.toMutableMap()
+
+        val jokers = groupedCards.getOrElse(rules.joker) { listOf() }.size
+        groupedCards.remove(rules.joker)
+
         val largestGroup = groupedCards.entries
             .flatMap { listOf(it.value.size to it.key) }
             .sortedByDescending { it.first }
 
-        return HandType.entries.single { it.matches(groupedCards.keys.count(), largestGroup.first().first) }
+        return HandType.entries.single { it.matches(groupedCards.keys.count(), largestGroup.first().first + jokers) }
     }
 
-    private val cardRank = "AKQJT98765432".reversed()
+    private val cardRank = rules.cardOrder.reversed()
     fun rank(): Int {
         return hand.reversed().asSequence().foldIndexed(0) { index, acc, char -> acc + cardRank.indexOf(char) * cardRank.length.toDouble().pow(index).toInt() }
     }
-   infix fun isStrongerThan(otherHand: Hand): Boolean {
-        val firstDifference = hand.zip(otherHand.hand).first { it.first != it.second }
-        return firstDifference.first > firstDifference.second
-    }
+}
+
+enum class Rules(val joker: Char, val cardOrder: String) {
+    Part1(' ', "AKQJT98765432"),
+    Part2('J', "AKQT98765432J")
 }
 
 enum class HandType(private val groupCount: Int, private val largestGroup: Int, val rank: Int) {
