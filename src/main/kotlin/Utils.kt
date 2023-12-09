@@ -8,6 +8,8 @@ fun dayFilePart(day: Int) = "Day0${day}"
 fun readInputForDay(day: Int) = readInput(dayFilePart(day))
 
 fun readTestInputForDay(day: Int) = readInput("${dayFilePart(day)}_test")
+
+fun readTestInputForDay(day: Int, number: Int) = readInput("${dayFilePart(day)}_test${number}")
 /**
  * Reads lines from the given input txt file.
  */
