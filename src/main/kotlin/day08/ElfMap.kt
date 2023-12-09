@@ -14,54 +14,33 @@ class ElfMap(val fileInput: List<String>) {
         return calculateStepsToEndUsing(instructions)
     }
 
-    fun calculateStepsToEndUsing(startLocations: List<String>, instructions: String): Long {
-        var steps = 0L
+    private fun calculateStepsRepetitionsToEndUsing(startLocations: List<String>, instructions: String): List<Long> {
         var locations = startLocations
-        val startLocationsCount = startLocations.count()
+        val startLocationsByMatches = List(startLocations.size) { index -> Pair(index, 0L) }
+            .associate { it }
+            .toMutableMap()
+
         val instructionsLength = instructions.length.toLong()
-        var instructionNumber: Int
-        var instruction: String
 
-        while (locations.count { it.endsWith("Z") } != startLocationsCount) {
+        var steps = 0L
+        while (startLocationsByMatches.any { it.value == 0L }) {
 
-            instructionNumber = (steps % instructionsLength).toInt()
-            instruction = instructions[instructionNumber].toString()
+            val instructionNumber = (steps % instructionsLength).toInt()
+            val instruction = instructions[instructionNumber].toString()
+
             locations = locations.map { navigateStep(it, instruction) }
             steps++
 
-            if (steps % 1_000_000L == 0L) println(String.format("%,d", steps))
+            locations.forEachIndexed { index, it -> if (it.endsWith("Z")) startLocationsByMatches[index] = steps }
+
         }
 
-        return steps
-    }
-
-    fun calculateStepsRepetitionsToEndUsing(startLocations: List<String>, instructions: String): List<List<Long>> {
-        var steps = 0L
-        var locations = startLocations
-        val startLocationsByMatches = startLocations.mapIndexed { index, _ -> Pair(index, mutableListOf<Long>()) }.associate { it }.toMutableMap()
-        val instructionsLength = instructions.length.toLong()
-        var instructionNumber: Int
-        var instruction: String
-
-        while (startLocationsByMatches.any { it.value.count() < 4 }) {
-
-            instructionNumber = (steps % instructionsLength).toInt()
-            instruction = instructions[instructionNumber].toString()
-
-            locations = locations.map { navigateStep(it, instruction) }
-
-            locations.forEachIndexed { index, it -> if (it.endsWith("Z")) startLocationsByMatches[index]?.add(steps) }
-
-            steps++
-
-            if (steps % 1_000_000L == 0L) println(String.format("%,d", steps))
-        }
-
-        return startLocationsByMatches.values.map { it.windowed(2, 1) { window -> window[1] - window[0] } }
+        return startLocationsByMatches.values.map { it }
     }
 
     fun calculateStepsToEndUsing(instructions: String): Long {
-        return calculateStepsToEndUsing(listOf("AAA"), instructions)
+        val repeatingSteps = calculateStepsRepetitionsToEndUsing(listOf("AAA"), instructions)
+        return findLowestCommonMultiple(repeatingSteps)
     }
 
     fun navigateStep(location: String, instruction: String): String {
@@ -70,18 +49,18 @@ class ElfMap(val fileInput: List<String>) {
 
     fun calculateGhostStepsToEnd(): Long {
         val startLocations = mapLines.entries.filter { it.key.endsWith("A") }.map { it.key }
-        var repeatingSteps = calculateStepsRepetitionsToEndUsing(startLocations, instructions).map { it.first() }
+        val repeatingSteps = calculateStepsRepetitionsToEndUsing(startLocations, instructions).map { it }
         return findLowestCommonMultiple(repeatingSteps)
     }
-    fun greatestCommonDivisor(a: Long, b: Long): Long {
+    private fun greatestCommonDivisor(a: Long, b: Long): Long {
         return if (b == 0L) a else greatestCommonDivisor(b, a % b)
     }
 
-    fun lowestCommonMultiple(a: Long, b: Long): Long {
+    private fun lowestCommonMultiple(a: Long, b: Long): Long {
         return a / greatestCommonDivisor(a, b) * b
     }
 
-    fun findLowestCommonMultiple(numbers: List<Long>): Long {
+    private fun findLowestCommonMultiple(numbers: List<Long>): Long {
         if (numbers.isEmpty()) return 0
         return numbers.reduce { acc, num -> lowestCommonMultiple(acc, num) }
     }

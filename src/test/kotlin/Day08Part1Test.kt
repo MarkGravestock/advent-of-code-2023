@@ -10,7 +10,7 @@ class Day08Part1Test : FunSpec({
         val fileInput = readTestInputForDay(8)
         val sut = ElfMap(fileInput)
 
-        test("It can calculate the hand type") {
+        test("It can calculate the next location") {
             forAll(
                 row("AAA", "L", "BBB"),
                 row("DDD", "R", "DDD")
