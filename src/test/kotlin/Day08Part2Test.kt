@@ -19,13 +19,8 @@ class Day08Part2Test : FunSpec({
         val sut = ElfMap(fileInput)
 
         test("It can find when all ghosts have reached the end") {
-            //sut.calculateGhostStepsToEnd() shouldBe 6
+            sut.calculateGhostStepsToEnd() shouldBe 21165830176709L
         }
-
-        test("It can find when first ghost has reached the end") {
-          //  sut.calculateGhostStepsToEndForFirst() shouldBe 6
-        }
-
     }
 })
 
