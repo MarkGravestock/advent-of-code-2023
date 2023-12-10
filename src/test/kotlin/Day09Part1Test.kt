@@ -1,3 +1,4 @@
+import day09.Oasis
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.data.forAll
 import io.kotest.data.row
@@ -44,11 +45,9 @@ class Day09Part1Test : FunSpec({
 
                 val differenceRows = sut.generateDifferenceUntilZero(sut.rowNumbers().first())
 
-                sut.generateHistory(differenceRows) shouldBe result
+                sut.generateHistory(differenceRows, Oasis.Direction.Forwards) shouldBe result
             }
         }
-
-
     }
 
     context("Part 1 Test File") {
@@ -68,77 +67,5 @@ class Day09Part1Test : FunSpec({
             sut.totalHistory() shouldBe 1887980197L
         }
     }
-
-    context("Part 2") {
-        test("It can produce the previous values") {
-            forAll(
-                row("0 3 6 9 12 15", -3L),
-                row("1 3 6 10 15 21", 0),
-                row("10  13  16  21  30  45", 5L),
-            ) { list, result ->
-                val sut = Oasis(listOf(list))
-
-                val differenceRows = sut.generateDifferenceUntilZero(sut.rowNumbers().first())
-
-                sut.generateEarlyHistory(differenceRows) shouldBe result
-            }
-        }
-
-        val fileInput = readTestInputForDay(9)
-        val sut = Oasis(fileInput)
-
-        test("It can calculate total history") {
-            sut.totalEarlyHistory() shouldBe 2L
-        }
-
-    }
-
-    context("Part 2 Real File") {
-        val fileInput = readInputForDay(9)
-        val sut = Oasis(fileInput)
-
-        test("It can calculate total history") {
-            sut.totalEarlyHistory() shouldBe 990L
-        }
-    }
-
-
 })
-
-class Oasis(private val oasisReport: List<String>) {
-    fun rowNumbers(): List<Sequence<Long>> {
-        return oasisReport.map { it.parseNumbers() }
-    }
-
-    fun generateDifference(sequence: Sequence<Long>): Sequence<Long> {
-        return sequence.windowed(size = 2).map { it[1] - it[0] }
-    }
-
-    suspend fun generateDifferenceUntilZero(first: Sequence<Long>): Sequence<Sequence<Long>> = sequence {
-        var nextValue = first
-        yield(first)
-        while (nextValue.any { it != 0L }) {
-            nextValue = generateDifference(nextValue)
-            yield(nextValue)
-
-            //return generateSequence { generateDifferenceUntilZero(first).flatMap { it } }.takeWhile { it.all { it > 0L } }
-        }
-    }
-
-    fun generateHistory(differences: Sequence<Sequence<Long>>): Long {
-        return differences.sumOf { it.last() }
-    }
-
-    fun generateEarlyHistory(differences: Sequence<Sequence<Long>>): Long {
-        return differences.map { it.first() }.toList().reversed().runningFold(0L) { accumulator, current -> current - accumulator }.last()
-    }
-
-    suspend fun totalEarlyHistory(): Long {
-        return rowNumbers().sumOf { generateEarlyHistory(generateDifferenceUntilZero(it)) }
-    }
-
-    suspend fun totalHistory(): Long {
-        return rowNumbers().sumOf { generateHistory(generateDifferenceUntilZero(it)) }
-    }
-}
 
