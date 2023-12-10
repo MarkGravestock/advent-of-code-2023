@@ -1,2 +1,2 @@
-    private val regex = "(\\d+)".toRegex()
+    private val regex = "-?(\\d+)".toRegex()
     fun String.parseNumbers() = regex.findAll(this).map { it.value.toLong() }
