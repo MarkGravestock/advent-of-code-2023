@@ -4,7 +4,6 @@ import io.kotest.matchers.shouldBe
 
 class Day08Part2Test : FunSpec({
 
-
     context("Part 2 Test Map") {
         val fileInput = readTestInputForDay(8, 2)
         val sut = ElfMap(fileInput)
