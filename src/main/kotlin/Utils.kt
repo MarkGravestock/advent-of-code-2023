@@ -3,7 +3,7 @@ import java.security.MessageDigest
 import kotlin.io.path.Path
 import kotlin.io.path.readLines
 
-fun dayFilePart(day: Int) = "Day0${day}"
+fun dayFilePart(day: Int) = "Day${String.format("""%02d""", day)}"
 
 fun readInputForDay(day: Int) = readInput(dayFilePart(day))
 
