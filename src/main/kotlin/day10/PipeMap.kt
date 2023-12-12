@@ -32,6 +32,7 @@ class PipeMap(val fileInput: List<String>) {
     fun at(coordinate: Coordinate) : Char {
        return fileInput[coordinate.y][coordinate.x]
     }
+
     fun movesAt(coordinate: Coordinate) : List<Coordinate> {
         val moves = directionForCurrentPipe[at(coordinate)]!!.entries
 
