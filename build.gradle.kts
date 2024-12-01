@@ -3,7 +3,7 @@ plugins {
 }
 
 kotlin {
-    jvmToolchain(20)
+    jvmToolchain(21)
 }
 
 
@@ -20,7 +20,7 @@ dependencies {
 
 tasks {
     wrapper {
-        gradleVersion = "8.4"
+        gradleVersion = "8.11.1"
     }
 }
 
