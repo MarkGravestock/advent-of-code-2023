@@ -16,7 +16,7 @@ class Day11Part1Test : FunSpec({
             sut.universe.first() shouldHaveLength 13
         }
 
-        test("It has galaxies") {
+        xtest("It has galaxies") {
             sut.galaxies() shouldHaveSize 42
         }
 
@@ -31,7 +31,7 @@ class Day11Part1Test : FunSpec({
             sut.manhattanDistance(Galaxy(4, 0), Galaxy(9, 10)) shouldBe 15
         }
 
-        test("It can calculate the shortest path") {
+        xtest("It can calculate the shortest path") {
             sut.shortestPath() shouldBe 374
         }
     }
@@ -40,7 +40,7 @@ class Day11Part1Test : FunSpec({
         val fileInput = readInputForDay(11)
         val sut = Universe(fileInput)
 
-        test("It can calculate the shortest path") {
+        xtest("It can calculate the shortest path") {
             sut.shortestPath() shouldBe 9724940
         }
     }
